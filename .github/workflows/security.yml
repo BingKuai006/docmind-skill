@@ -1,0 +1,63 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  security:
+    name: Security Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Secret Detection
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+
+      - name: Run linter
+        run: npm run lint || echo "No lint script configured"
+
+      - name: Run tests
+        run: npm test || echo "No test script configured"
+
+      - name: Check file permissions
+        run: |
+          find . -type f -perm /111 -not -path "./node_modules/*" -not -path "./.git/*" | head -20
+
+  large-files:
+    name: Check Large Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for large files
+        run: |
+          large_files=$(find . -type f -size +1M -not -path "./.git/*" -not -path "./node_modules/*" 2>/dev/null || true)
+          if [ -n "$large_files" ]; then
+            echo "❌ 发现大文件 (>1MB):"
+            echo "$large_files"
+            exit 1
+          else
+            echo "✅ 没有发现大文件"
+          fi

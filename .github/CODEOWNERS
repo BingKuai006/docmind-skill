@@ -1,0 +1,23 @@
+# Code Owners
+# 定义谁负责审查特定路径的代码
+# 语法: <路径模式> <GitHub用户名或团队>
+
+# 默认审查者
+* @BingKuai006
+
+# AI 相关配置
+ai/ @BingKuai006
+docs/ai/ @BingKuai006
+
+# 核心配置文件
+.github/ @BingKuai006
+*.yml @BingKuai006
+*.yaml @BingKuai006
+
+# 安全配置
+.github/workflows/ @BingKuai006
+lefthook.yml @BingKuai006
+
+# 文档
+README.md @BingKuai006
+*.md @BingKuai006
