@@ -1,0 +1,42 @@
+# 依赖
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 编译输出
+dist/
+build/
+*.tsbuildinfo
+
+# 测试
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+logs/
+
+# 临时文件
+*.tmp
+.temp/
+tmp/
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# 示例项目中的嵌套 git 仓库
+examples/JDcapture/

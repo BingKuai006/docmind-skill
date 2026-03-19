@@ -1,0 +1,6 @@
+const path = require('path');
+const fs = require('fs');
+
+console.log('__dirname:', __dirname);
+console.log('Expected skill.yaml path:', path.join(__dirname, '..', '..', 'skill.yaml'));
+console.log('File exists:', fs.existsSync(path.join(__dirname, '..', '..', 'skill.yaml')));

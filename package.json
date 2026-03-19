@@ -1,0 +1,35 @@
+{
+  "name": "docmind-skill",
+  "version": "1.0.0",
+  "description": "自动分析项目结构，为文件夹和文件生成面向小白的说明文档",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "ts-node src/main.ts",
+    "test": "jest"
+  },
+  "keywords": [
+    "documentation",
+    "code-analysis",
+    "project-structure"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.58",
+    "ai": "^6.0.116",
+    "dashscope": "^1.0.1",
+    "dotenv": "^17.3.1",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/js-yaml": "^4.0.5",
+    "@types/node": "^20.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
+}

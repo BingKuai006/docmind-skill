@@ -1,0 +1,60 @@
+name: docmind
+version: 1.0.0
+description: 自动分析项目结构，为文件夹和文件生成面向小白的说明文档
+author: AI Assistant
+category: documentation
+
+triggers:
+  - type: command
+    name: /docmind
+    description: 分析项目并生成说明文档
+
+entry_point: dist/main.js
+
+permissions:
+  - filesystem:read
+  - filesystem:write
+
+config:
+  default_output_lang: zh-CN
+  max_depth: 5
+  exclude_patterns:
+    - node_modules
+    - .git
+    - .sisyphus
+    - dist
+    - build
+    - coverage
+    - .vscode
+    - .idea
+    - "*.log"
+    - "*.tmp"
+    - "*.backup"
+    - .DS_Store
+    - package-lock.json
+    - yarn.lock
+  
+  ai:
+    enabled: true
+    mode: hybrid
+    
+    local:
+      enabled: false
+      endpoint: http://localhost:11434
+      model: qwen:1.8b
+    
+    cloud:
+      enabled: true
+      provider: dashscope
+      # api_key 和 endpoint 从环境变量读取 (AI_API_KEY, AI_BASE_URL)
+      model: qwen3.5-plus
+      timeout_ms: 15000
+    
+    fallback:
+      on_error: rule
+      retry_count: 1
+    
+    cache:
+      enabled: true
+      ttl_hours: 24
+      max_size: 500
