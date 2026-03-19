@@ -1,51 +1,27 @@
 commit-msg:
   commands:
     commitlint:
-      run: echo "提交信息检查通过" || true
+      run: echo "✅ 提交信息检查通过"
 
 pre-commit:
   commands:
     secret-detection:
-      glob: "*"
-      run: |
-        if grep -r -E "(password|passwd|pwd|secret|token|key|apikey|api_key)['\"\s]*[=:]+['\"\s]*[^'\"\s]+" --include="*.ts" --include="*.js" --include="*.json" --include="*.yml" --include="*.yaml" --include="*.md" --include="*.env*" . 2>/dev/null | grep -v "node_modules" | grep -v ".git" | grep -v "example" | grep -v "test" | grep -v "lefthook" | head -5; then
-          echo "⚠️ 警告: 发现可能的敏感信息，请检查提交内容"
-          echo "如果确认安全，使用 git commit --no-verify 跳过检查"
-          exit 1
-        fi
-        echo "✅ 敏感信息检查通过"
+      run: bash scripts/hooks/check-secrets.sh
 
     check-env-files:
       glob: ".env*"
       run: |
+        echo ""
         echo "❌ 错误: 不允许提交 .env 文件！"
-        echo "请将 .env 文件从提交中移除: git reset HEAD .env*"
+        echo ""
+        echo "请从暂存区移除: git reset HEAD .env*"
+        echo ""
         exit 1
 
     check-large-files:
-      glob: "*"
-      run: |
-        large_files=$(find . -type f -size +1M -not -path "./.git/*" -not -path "./node_modules/*" 2>/dev/null | head -5)
-        if [ -n "$large_files" ]; then
-          echo "❌ 发现大文件 (>1MB)，不允许提交:"
-          echo "$large_files"
-          exit 1
-        fi
+      run: bash scripts/hooks/check-large-files.sh
 
 pre-push:
   commands:
     protect-main:
-      run: |
-        branch=$(git symbolic-ref --short HEAD)
-        if [ "$branch" = "main" ]; then
-          echo "❌ 禁止直接推送到 main 分支！"
-          echo "请创建功能分支并提交 Pull Request"
-          exit 1
-        fi
-        echo "✅ 分支检查通过"
-
-    prevent-force-push:
-      run: |
-        if [ "$LEFTHOOK_FORCE_PUSH" = "true" ]; then
-          echo "⚠️ 强制推送检测"
-        fi
+      run: bash scripts/hooks/protect-branch.sh
